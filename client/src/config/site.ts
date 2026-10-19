@@ -6,8 +6,9 @@ export const site = {
   name: "ITcareer.pk",
   domain: "itcareer.pk",
   email: "info@itcareer.pk",
-  /** International format without +, e.g. "923001234567". Also settable with VITE_WHATSAPP_NUMBER. */
-  whatsappNumber: (import.meta.env.VITE_WHATSAPP_NUMBER as string | undefined) || null,
+  /** International format without +, e.g. "923001234567". VITE_WHATSAPP_NUMBER overrides it. */
+  whatsappNumber: (import.meta.env.VITE_WHATSAPP_NUMBER as string | undefined) || "923207668724",
+  phone: { display: "0320 7668724", tel: "+923207668724" },
   social: {
     youtube: `https://www.youtube.com/@${handle}`,
     instagram: `https://www.instagram.com/${handle}`,
@@ -32,8 +33,8 @@ export const site = {
   ],
   /** Payment accounts shown in the enrolment section. Fill these in before going live. */
   payment: {
-    jazzcash: { title: "JazzCash", accountName: null as string | null, accountNumber: null as string | null },
-    easypaisa: { title: "Easypaisa", accountName: null as string | null, accountNumber: null as string | null },
+    jazzcash: { title: "JazzCash", accountName: "AMT ISLAM" as string | null, accountNumber: "0320 7668724" as string | null },
+    easypaisa: { title: "Easypaisa", accountName: "AMT ISLAM" as string | null, accountNumber: "0320 7668724" as string | null },
     bankTransfer: { title: "Bank transfer", accountName: null as string | null, accountNumber: null as string | null, bank: null as string | null },
   },
 } as const;

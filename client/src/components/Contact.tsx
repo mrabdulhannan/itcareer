@@ -37,6 +37,9 @@ export function Contact() {
                 <WhatsAppIcon width={24} height={24} /> Chat on WhatsApp
               </a>
             )}
+            <a href={`tel:${site.phone.tel}`} className="block rounded-2xl px-5 py-4 font-semibold ring-1 ring-slate-200 hover:ring-brand-500">
+              📞 Call {site.phone.display}
+            </a>
             <a href={`mailto:${site.email}`} className="block rounded-2xl px-5 py-4 font-semibold ring-1 ring-slate-200 hover:ring-brand-500">
               ✉️ {site.email}
             </a>
