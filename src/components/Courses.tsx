@@ -64,6 +64,9 @@ export function Courses({ onEnroll }: { onEnroll: (slug: CourseSlug) => void }) 
                   <p>
                     <span className="block text-sm text-ink-500">Course fee</span>
                     <span className="text-2xl font-extrabold">{course.fee ?? "Ask for fee"}</span>
+                    {course.originalFee && course.fee && (
+                      <s className="ml-2 text-base font-semibold text-ink-500 decoration-red-500 decoration-2">{course.originalFee}</s>
+                    )}
                   </p>
                   <button
                     type="button"

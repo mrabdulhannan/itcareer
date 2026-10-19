@@ -59,6 +59,8 @@ export interface Course {
   duration: string | null;
   /** e.g. "Rs 15,000". null shows "Ask for fee". */
   fee: string | null;
+  /** Price before a discount, shown struck through next to `fee`. */
+  originalFee?: string;
   /** e.g. "Starts 8 November 2026". null hides it. */
   nextBatch: string | null;
   modules: string[];
@@ -76,7 +78,8 @@ export const courses: Course[] = [
     language: "Urdu / English",
     level: "Beginner to intermediate",
     duration: null,
-    fee: null,
+    fee: "Rs 7,000",
+    originalFee: "Rs 15,000",
     nextBatch: null,
     modules: [
       "Shopify admin, store setup and products",
