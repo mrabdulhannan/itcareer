@@ -1,0 +1,22 @@
+# Render Blueprint: free web service for ITcareer.pk (API + site in one service).
+# Database: create a free MongoDB Atlas M0 cluster and paste its connection string as MONGODB_URI.
+services:
+  - type: web
+    name: itcareer
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      - key: MONGODB_URI
+        sync: false
+      - key: CORS_ORIGINS
+        value: https://itcareer.pk,https://www.itcareer.pk
+      - key: VITE_WHATSAPP_NUMBER
+        sync: false

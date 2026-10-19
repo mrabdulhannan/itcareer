@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --color-brand-50: #ecfdf5;
+  --color-brand-100: #d1fae5;
+  --color-brand-500: #10a36a;
+  --color-brand-600: #0b8a59;
+  --color-brand-700: #0b6b47;
+  --color-brand-900: #063a28;
+  --color-ink-900: #0b1220;
+  --color-ink-700: #334155;
+  --color-ink-500: #64748b;
+  --color-accent-400: #fbbf24;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-white font-sans text-ink-900 antialiased;
+}
+
+section[id] {
+  scroll-margin-top: 5rem;
+}

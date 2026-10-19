@@ -1,0 +1,27 @@
+{
+  "name": "itcareer",
+  "private": true,
+  "version": "0.1.0",
+  "description": "ITcareer.pk: courses and, later, an IT job marketplace for Pakistan (MERN, TypeScript frontend)",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,green \"npm run dev -w server\" \"npm run dev -w client\"",
+    "build": "npm run build -w client && npm run build -w server",
+    "start": "npm run start -w server",
+    "test": "npm run test -w server",
+    "typecheck": "npm run typecheck -w client && npm run typecheck -w server",
+    "lint": "npm run lint -w client"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  },
+  "overrides": {
+    "napi-postinstall": "0.3.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
