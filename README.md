@@ -38,6 +38,19 @@ NODE_ENV=production npm start   # Express serves the API and the built site on P
 
 Host on any Node server (a VPS with Nginx + PM2, Render, Railway) with MongoDB Atlas. Set `MONGODB_URI`, `PORT`, `CORS_ORIGINS` and `NODE_ENV=production`.
 
+## Deploy on Vercel (free)
+
+The repo is ready for Vercel: `vercel.json` builds the site into static files (`client/dist`) and runs the API as one serverless function (`api/index.js` → `server/src/serverless.ts`).
+
+1. **Database:** create a free MongoDB Atlas **M0** cluster (see step 1 below). Under Network Access allow `0.0.0.0/0`, because Vercel has no fixed IP addresses.
+2. Sign in at vercel.com with GitHub → **Add New → Project** → import `itcareer`. Leave Framework Preset as **Other**; build settings come from `vercel.json`.
+3. Add environment variables before the first deploy:
+   - `MONGODB_URI`: your Atlas connection string, e.g. `mongodb+srv://user:pass@cluster0.xxxxx.mongodb.net/itcareer?retryWrites=true&w=majority`
+   - `CORS_ORIGINS`: `https://itcareer.pk,https://www.itcareer.pk` (optional; the site and API share one domain)
+   - `VITE_WHATSAPP_NUMBER`: optional, e.g. `923001234567`
+4. Deploy. The site is live at `https://<project>.vercel.app`; check `/api/health` returns `{"ok":true}`.
+5. **Domain:** Project → Settings → Domains → add `itcareer.pk` and `www.itcareer.pk`, then add the DNS records Vercel shows at your .pk registrar.
+
 ## Deploy for free (Render + MongoDB Atlas)
 
 1. **Database:** sign up at mongodb.com/atlas, create a free **M0** cluster (region: Mumbai or Singapore), add a database user, allow access from `0.0.0.0/0`, and copy the connection string (`mongodb+srv://...`). Add `/itcareer` before the `?` so data goes into the `itcareer` database.
