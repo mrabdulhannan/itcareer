@@ -1,18 +1,16 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { courses, site, type CourseSlug } from "../config/site";
-import { createEnrollment, type EnrollmentInput, type PaymentMethod } from "../lib/api";
-import { useSubmit } from "../lib/useSubmit";
-import { FormMessage, SectionHeading, SelectField, SubmitButton, TextField } from "./Field";
+import { submittedChannel, useEnquiryForm } from "../lib/useSubmit";
+import { checkEmail, checkMobile, checkName, checkRequired, collectErrors } from "../lib/validate";
+import { FormError, SectionHeading, SelectField, SendButtons, SentMessage, TextField } from "./Field";
 
-const paymentOptions: { value: PaymentMethod; account: { title: string; accountName: string | null; accountNumber: string | null; bank?: string | null } }[] = [
-  { value: "jazzcash", account: site.payment.jazzcash },
-  { value: "easypaisa", account: site.payment.easypaisa },
-  { value: "bank-transfer", account: site.payment.bankTransfer },
-];
+type Account = { title: string; accountName: string | null; accountNumber: string | null; bank?: string | null };
+
+const paymentOptions: Account[] = [site.payment.jazzcash, site.payment.easypaisa, site.payment.bankTransfer];
 
 export function Enroll({ selectedCourse }: { selectedCourse: CourseSlug | "" }) {
   const [course, setCourse] = useState<CourseSlug | "">(selectedCourse);
-  const { status, fieldErrors, submit } = useSubmit(createEnrollment);
+  const { status, fieldErrors, submit, reset } = useEnquiryForm();
 
   useEffect(() => {
     if (selectedCourse) setCourse(selectedCourse);
@@ -21,14 +19,32 @@ export function Enroll({ selectedCourse }: { selectedCourse: CourseSlug | "" }) 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    void submit({
-      name: String(form.get("enroll-name") ?? ""),
-      email: String(form.get("enroll-email") ?? ""),
-      whatsapp: String(form.get("enroll-whatsapp") ?? ""),
-      courseSlug: course,
-      paymentMethod: String(form.get("enroll-payment") ?? "") as EnrollmentInput["paymentMethod"],
-      transactionId: String(form.get("enroll-txn") ?? ""),
+    const get = (key: string) => String(form.get(key) ?? "");
+    const name = get("enroll-name");
+    const email = get("enroll-email");
+    const whatsapp = get("enroll-whatsapp");
+    const payment = get("enroll-payment");
+
+    const errors = collectErrors({
+      courseSlug: checkRequired(course, "Please choose a course"),
+      name: checkName(name),
+      email: checkEmail(email),
+      whatsapp: checkMobile(whatsapp),
+      paymentMethod: checkRequired(payment, "Please choose how you paid"),
     });
+
+    const enquiry = {
+      title: "New enrolment – ITcareer.pk",
+      fields: {
+        Course: courses.find((c) => c.slug === course)?.title,
+        Name: name,
+        Email: email,
+        WhatsApp: whatsapp,
+        "Paid with": payment,
+        "Transaction ID": get("enroll-txn"),
+      },
+    };
+    submit(errors, enquiry, submittedChannel(event));
   }
 
   return (
@@ -38,11 +54,11 @@ export function Enroll({ selectedCourse }: { selectedCourse: CourseSlug | "" }) 
           <SectionHeading
             eyebrow="Enroll now"
             title="Reserve your seat"
-            intro="Seats in each weekend batch are limited so everyone gets attention. Pay the fee, then submit this form with your transaction ID."
+            intro="Seats in each weekend batch are limited so everyone gets attention. Pay the fee, then send us your details with the transaction ID."
           />
           <div className="mt-8 space-y-3">
-            {paymentOptions.map(({ value, account }) => (
-              <div key={value} className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+            {paymentOptions.map((account) => (
+              <div key={account.title} className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
                 <p className="font-bold">{account.title}</p>
                 {account.accountNumber ? (
                   <p className="mt-1 text-sm text-ink-700">
@@ -64,9 +80,9 @@ export function Enroll({ selectedCourse }: { selectedCourse: CourseSlug | "" }) 
           </p>
         </div>
 
-        <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-9">
+        <div className="flex flex-col justify-center rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-9">
           {status.kind === "done" ? (
-            <FormMessage kind="done">{status.message}</FormMessage>
+            <SentMessage status={status} onBack={reset} />
           ) : (
             <form onSubmit={handleSubmit} noValidate className="grid gap-5 sm:grid-cols-2">
               <SelectField
@@ -86,7 +102,15 @@ export function Enroll({ selectedCourse }: { selectedCourse: CourseSlug | "" }) 
                 ))}
               </SelectField>
               <TextField id="enroll-name" label="Full name" autoComplete="name" placeholder="Your name" error={fieldErrors.name} required />
-              <TextField id="enroll-email" label="Email" type="email" autoComplete="email" placeholder="you@example.com" error={fieldErrors.email} required />
+              <TextField
+                id="enroll-email"
+                label="Email"
+                type="email"
+                autoComplete="email"
+                placeholder="you@example.com"
+                error={fieldErrors.email}
+                required
+              />
               <TextField
                 id="enroll-whatsapp"
                 label="WhatsApp number"
@@ -99,23 +123,16 @@ export function Enroll({ selectedCourse }: { selectedCourse: CourseSlug | "" }) 
               />
               <SelectField id="enroll-payment" label="Paid with" defaultValue="" error={fieldErrors.paymentMethod} required>
                 <option value="">Select a method</option>
-                {paymentOptions.map(({ value, account }) => (
-                  <option key={value} value={value}>
+                {paymentOptions.map((account) => (
+                  <option key={account.title} value={account.title}>
                     {account.title}
                   </option>
                 ))}
               </SelectField>
-              <TextField
-                id="enroll-txn"
-                label="Transaction ID"
-                hint="optional"
-                className="sm:col-span-2"
-                placeholder="e.g. 0123456789"
-                error={fieldErrors.transactionId}
-              />
-              <div className="sm:col-span-2 space-y-3">
-                <SubmitButton sending={status.kind === "sending"}>Submit enrolment</SubmitButton>
-                {status.kind === "error" && <FormMessage kind="error">{status.message}</FormMessage>}
+              <TextField id="enroll-txn" label="Transaction ID" hint="optional" className="sm:col-span-2" placeholder="e.g. 0123456789" />
+              <div className="space-y-3 sm:col-span-2">
+                <SendButtons whatsappLabel="Send on WhatsApp" />
+                {status.kind === "error" && <FormError>{status.message}</FormError>}
               </div>
             </form>
           )}

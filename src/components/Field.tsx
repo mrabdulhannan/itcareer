@@ -1,4 +1,6 @@
 import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
+import type { Channel } from "../lib/send";
+import { WhatsAppIcon } from "./Icons";
 
 const control =
   "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-ink-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 aria-[invalid=true]:border-red-500";
@@ -51,36 +53,83 @@ export function SelectField({ id, label, hint, error, className, children, ...pr
 export function TextAreaField({ id, label, hint, error, className, ...props }: Common & TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <Wrapper id={id} label={label} hint={hint} error={error} className={className}>
-      <textarea id={id} name={id} rows={4} aria-invalid={!!error} aria-describedby={error ? `${id}-error` : undefined} className={control} {...props} />
+      <textarea
+        id={id}
+        name={id}
+        rows={4}
+        aria-invalid={!!error}
+        aria-describedby={error ? `${id}-error` : undefined}
+        className={control}
+        {...props}
+      />
     </Wrapper>
   );
 }
 
-export function SubmitButton({ sending, children }: { sending: boolean; children: ReactNode }) {
+/** The pair of submit buttons every enquiry form uses; the clicked one decides the channel. */
+export function SendButtons({ whatsappLabel = "Send on WhatsApp" }: { whatsappLabel?: string }) {
   return (
-    <button
-      type="submit"
-      disabled={sending}
-      className="w-full rounded-xl bg-brand-700 px-6 py-3.5 text-base font-bold text-white transition hover:bg-brand-600 disabled:opacity-60"
-    >
-      {sending ? "Sending…" : children}
-    </button>
+    <div className="grid gap-3 sm:grid-cols-2">
+      <button
+        type="submit"
+        name="channel"
+        value="whatsapp"
+        className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-700 px-6 py-3.5 text-base font-bold text-white transition hover:bg-brand-600"
+      >
+        <WhatsAppIcon /> {whatsappLabel}
+      </button>
+      <button
+        type="submit"
+        name="channel"
+        value="email"
+        className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 text-base font-bold text-ink-900 ring-1 ring-slate-300 transition hover:ring-brand-500"
+      >
+        ✉️ Send by email
+      </button>
+    </div>
   );
 }
 
-export function FormMessage({ kind, children }: { kind: "done" | "error"; children: ReactNode }) {
-  return kind === "done" ? (
-    <div role="status" className="rounded-2xl bg-brand-50 p-6 text-center font-semibold text-brand-700">
-      {children}
+/** Shown after a form opens WhatsApp or the email app, with a link in case nothing opened. */
+export function SentMessage({ status, onBack }: { status: { channel: Channel; href: string }; onBack: () => void }) {
+  const app = status.channel === "email" ? "Your email app" : "WhatsApp";
+  return (
+    <div role="status" className="rounded-2xl bg-brand-50 p-6 text-center">
+      <p className="font-bold text-brand-700">{app} has opened with your details.</p>
+      <p className="mt-1 text-ink-700">Press send to finish. We usually reply within a few hours.</p>
+      <p className="mt-4 text-sm">
+        Didn't open?{" "}
+        <a href={status.href} target="_blank" rel="noreferrer" className="font-semibold text-brand-700 underline">
+          Try again
+        </a>{" "}
+        ·{" "}
+        <button type="button" onClick={onBack} className="font-semibold text-brand-700 underline">
+          Edit details
+        </button>
+      </p>
     </div>
-  ) : (
+  );
+}
+
+export function FormError({ children }: { children: ReactNode }) {
+  return (
     <p role="alert" className="text-center text-sm text-red-600">
       {children}
     </p>
   );
 }
 
-export function SectionHeading({ eyebrow, title, intro, center = false }: { eyebrow: string; title: string; intro?: string; center?: boolean }) {
+export function SectionHeading({
+  eyebrow,
+  title,
+  intro,
+  center = false,
+}: {
+  eyebrow: string;
+  title: string;
+  intro?: string;
+  center?: boolean;
+}) {
   return (
     <div className={center ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
       <p className="text-sm font-bold uppercase tracking-widest text-brand-700">{eyebrow}</p>

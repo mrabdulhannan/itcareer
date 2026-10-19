@@ -29,10 +29,26 @@ export function Footer() {
         <nav aria-label="Company">
           <p className="font-bold text-white">ITcareer.pk</p>
           <ul className="mt-4 space-y-2">
-            <li><a href="#about" className="hover:text-white">About</a></li>
-            <li><a href="#jobs" className="hover:text-white">For companies</a></li>
-            <li><a href="#faq" className="hover:text-white">FAQ</a></li>
-            <li><a href="#contact" className="hover:text-white">Contact</a></li>
+            <li>
+              <a href="#about" className="hover:text-white">
+                About
+              </a>
+            </li>
+            <li>
+              <a href="#jobs" className="hover:text-white">
+                For companies
+              </a>
+            </li>
+            <li>
+              <a href="#faq" className="hover:text-white">
+                FAQ
+              </a>
+            </li>
+            <li>
+              <a href="#contact" className="hover:text-white">
+                Contact
+              </a>
+            </li>
           </ul>
         </nav>
       </div>

@@ -1,7 +1,7 @@
 const steps = [
   { title: "Choose a course", body: "Pick Shopify Development or Cyber Security." },
   { title: "Pay the fee", body: "Pay by JazzCash, Easypaisa or bank transfer." },
-  { title: "Submit the form", body: "Enter your details and transaction ID below." },
+  { title: "Send your details", body: "Fill in the form; it opens WhatsApp with your details." },
   { title: "Join the class", body: "We confirm on WhatsApp and send your class link." },
 ];
 

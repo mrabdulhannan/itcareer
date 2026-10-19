@@ -51,7 +51,10 @@ export function Courses({ onEnroll }: { onEnroll: (slug: CourseSlug) => void }) 
 
                 <ul className="mt-6 flex flex-wrap gap-2">
                   {course.outcomes.map((outcome) => (
-                    <li key={outcome} className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+                    <li
+                      key={outcome}
+                      className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700"
+                    >
                       <CheckIcon width={14} height={14} /> {outcome}
                     </li>
                   ))}

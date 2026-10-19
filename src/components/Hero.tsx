@@ -13,8 +13,8 @@ export function Hero() {
             Build a career in IT with <span className="text-brand-700">practical, job-ready skills.</span>
           </h1>
           <p className="mt-5 max-w-xl text-lg text-ink-700">
-            Live weekend classes in Shopify Development and Cyber Security, taught in Urdu by an industry professional who
-            works with international clients.
+            Live weekend classes in Shopify Development and Cyber Security, taught in Urdu by an industry professional who works with
+            international clients.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a

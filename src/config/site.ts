@@ -5,9 +5,9 @@ const handle = "officialitcareer";
 export const site = {
   name: "ITcareer.pk",
   domain: "itcareer.pk",
-  email: "info@itcareer.pk",
-  /** International format without +, e.g. "923001234567". VITE_WHATSAPP_NUMBER overrides it. */
-  whatsappNumber: (import.meta.env.VITE_WHATSAPP_NUMBER as string | undefined) || "923207668724",
+  email: "officialitcareer@gmail.com",
+  /** International format without +. Forms send their details here on WhatsApp, or to `email`. */
+  whatsappNumber: "923207668724",
   phone: { display: "0320 7668724", tel: "+923207668724" },
   social: {
     youtube: `https://www.youtube.com/@${handle}`,
@@ -35,7 +35,12 @@ export const site = {
   payment: {
     jazzcash: { title: "JazzCash", accountName: "AMT ISLAM" as string | null, accountNumber: "0320 7668724" as string | null },
     easypaisa: { title: "Easypaisa", accountName: "AMT ISLAM" as string | null, accountNumber: "0320 7668724" as string | null },
-    bankTransfer: { title: "Bank transfer", accountName: null as string | null, accountNumber: null as string | null, bank: null as string | null },
+    bankTransfer: {
+      title: "Bank transfer",
+      accountName: null as string | null,
+      accountNumber: null as string | null,
+      bank: null as string | null,
+    },
   },
 } as const;
 
@@ -103,7 +108,12 @@ export const courses: Course[] = [
       "Security tools: Wireshark, Nmap and more (hands-on labs)",
       "Incident response and a roadmap to certifications",
     ],
-    outcomes: ["Understand real-world threats", "Hands-on lab practice", "Prepare for entry-level certifications", "Certificate of completion"],
+    outcomes: [
+      "Understand real-world threats",
+      "Hands-on lab practice",
+      "Prepare for entry-level certifications",
+      "Certificate of completion",
+    ],
   },
 ];
 
@@ -122,7 +132,7 @@ export const faqs = [
   },
   {
     q: "How do I pay?",
-    a: "Pay by JazzCash, Easypaisa or bank transfer, then fill in the enrolment form with your transaction ID. We confirm on WhatsApp and send your class details.",
+    a: "Pay by JazzCash or Easypaisa, then send the enrolment form with your transaction ID. It opens WhatsApp with your details; we confirm your payment there and send your class details.",
   },
   {
     q: "Will I get a certificate?",
